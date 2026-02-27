@@ -48,34 +48,13 @@ typedef struct {
     TokenType type;
 } Keyword;
 
-Keyword keywords[] = {
-    {"push", TOKEN_PUSH},
-    {"set", TOKEN_SET},
-    {"repeat", TOKEN_REPEAT},
-    {"end", TOKEN_END},
-    {"jumpif", TOKEN_JUMPIF},
-    {"breakif", TOKEN_BREAKIF},
-    {"fn", TOKEN_FN},
-    {"endfn", TOKEN_ENDFN},
-    {"asm", TOKEN_ASM},
-    {"@macro", TOKEN_MACRO},
-    {"@label", TOKEN_MACRO},
-};
-
-#define KEYWORD_COUNT (sizeof(keywords) / sizeof(Keyword))
-
 typedef struct {
     const char* start;
     const char* current;
     uint64_t line;
 } Lexer;
 
-void vl_lexer_init(Lexer* lexer, const char* source) {
-    lexer->start = source;
-    lexer->current = source;
-    lexer->line = 0;
-}
-
+void vl_lexer_init(Lexer*, const char*);
 Token vl_lexer_next(Lexer*);
 
 #endif /* LEXER_H */
