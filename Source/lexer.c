@@ -1,7 +1,25 @@
 #include <ctype.h>
 #include <stdint.h>
+#include <string.h>
+#include <stdlib.h>
 
 #include "Includes/lexer.h"
+
+Keyword keywords[] = {
+    {"push", TOKEN_PUSH},
+    {"set", TOKEN_SET},
+    {"repeat", TOKEN_REPEAT},
+    {"end", TOKEN_END},
+    {"jumpif", TOKEN_JUMPIF},
+    {"breakif", TOKEN_BREAKIF},
+    {"fn", TOKEN_FN},
+    {"endfn", TOKEN_ENDFN},
+    {"asm", TOKEN_ASM},
+    {"@macro", TOKEN_MACRO},
+    {"@label", TOKEN_LABEL},
+};
+
+#define KEYWORD_COUNT (sizeof(keywords) / sizeof(Keyword))
 
 static int is_at_end(Lexer* lexer) { return *lexer->current == '\0'; }
 static char advance(Lexer* lexer) { lexer->current++; return lexer->current[-1]; }
@@ -70,7 +88,13 @@ static Token check_keyword(Lexer* lexer) {
     return make_token(lexer, TOKEN_IDENTIFIER);
 }
 
-Token lexer_next(Lexer* lexer) {
+void vl_lexer_init(Lexer* lexer, const char* source) {
+    lexer->start = source;
+    lexer->current = source;
+    lexer->line = 0;
+}
+
+Token vl_lexer_next(Lexer* lexer) {
     skip_whitespace(lexer);
 
     lexer->start = lexer->current;
