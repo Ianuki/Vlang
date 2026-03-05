@@ -1,4 +1,4 @@
-# Vlang
+# ViLang
 A minimal, statically-typed, low-level systems language.
 
 This project is stupid and im only working on it because i got nothing better to do\
