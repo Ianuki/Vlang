@@ -125,6 +125,10 @@ Token vl_lexer_next(Lexer* lexer) {
             if (match(lexer, '=')) return make_token(lexer, TOKEN_EQEQ);
             return make_token(lexer, TOKEN_EQ);
 
+        case '!':
+            if (match(lexer, '=')) return make_token(lexer, TOKEN_NEQ);
+            return make_token(lexer, TOKEN_EXCL);
+
         case ',': return make_token(lexer, TOKEN_COMMA);
         case ':': return make_token(lexer, TOKEN_COLON);
         case '(': return make_token(lexer, TOKEN_LPAREN);

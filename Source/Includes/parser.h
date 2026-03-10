@@ -2,24 +2,26 @@
 #define PARSER_H
 
 typedef enum {
-    NODE_DECL,
-    NODE_MACRO,
+    NODE_PUSH,
+    NODE_SET,
     NODE_ASSIGN,
-    NODE_NUMBER,
     NODE_IDENTIFIER,
-    NODE_BINARY_OP
 } NodeType;
 
 typedef struct ASTNode {
     NodeType type;
     union {
-        struct { const char* name; int value; } macro;
-        struct { const char* name; struct ASTNode* expr; } decl;
-        struct { const char* name; struct ASTNode* expr; } assign;
-        int number;
-        const char* identifier;
-        struct { struct ASTNode* left; struct ASTNode* right; char op; } binary;
+        struct { Token identifier; Token type; } push;
     };
 } ASTNode;
 
 #endif
+
+/*
+    push var1: U64
+
+    N* Push:
+        N* Identifier = "var1"
+        N* Type = DT_U64
+
+*/

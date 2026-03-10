@@ -30,12 +30,14 @@ typedef enum {
     TOKEN_SLASH,
     TOKEN_EQ,
     TOKEN_EQEQ,
+    TOKEN_NEQ,
     TOKEN_COMMA,
     TOKEN_COLON,
     TOKEN_LPAREN,
     TOKEN_RPAREN,
     TOKEN_LBRACKET,
-    TOKEN_RBRACKET
+    TOKEN_RBRACKET,
+    TOKEN_EXCL
 } TokenType;
 
 typedef struct {
