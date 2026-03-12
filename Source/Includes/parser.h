@@ -8,6 +8,18 @@
 #include "lexer.h"
 
 typedef enum {
+    ARBITRARY, /* do -> end*/
+    BLOCK_FUNCTION,
+    BLOCK_IF,
+    BLOCK_REPEAT
+} CodeBlockType;
+
+typedef struct {
+    size_t id;
+    CodeBlockType type;
+} CodeBlock;
+
+typedef enum {
     NODE_PUSH,
     NODE_SET,
     NODE_ASSIGN,
@@ -22,9 +34,9 @@ typedef struct ASTNode {
 } ASTNode;
 
 typedef struct {
-    size_t code_block_stack[CODE_BLOCK_STACK_SIZE];
+    CodeBlock code_block_stack[CODE_BLOCK_STACK_SIZE];
     size_t block_id;
-    uint8_t stack_pointer; /* uint8_t -> CODE_BLOCK_STACK_SIZE < 256 */
+    uint8_t block_stack_pointer; /* uint8_t -> CODE_BLOCK_STACK_SIZE < 256 */
 } Parser;
 
 void vl_parser_init(Parser* parser);

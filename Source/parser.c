@@ -25,15 +25,25 @@ static void expect_token(Lexer* lexer, TokenType type) {
     }
 }
 
-static void enter_code_block(Parser* parser) {
-    if (parser->stack_pointer > CODE_BLOCK_STACK_SIZE) { /* Fix conflicts later (uint8_t SP max = 254) */
+static void enter_code_block(Parser* parser, CodeBlockType type) {
+    if (parser->block_stack_pointer == CODE_BLOCK_STACK_SIZE) { /* Fix conflicts later (This check is absurdly idiotic) */
         printf("Parser error: code block overflow.");
         exit(1);
     }
+
+    parser->code_block_stack[parser->block_stack_pointer++] = (CodeBlock){
+        parser->block_id++,
+        type
+    };
 }
 
 static void leave_code_block(Parser* parser) {
+    if (parser->block_stack_pointer == 0) { /* Same stupid check, Fix later */
+        printf("Parser error: code block underflow.");
+        exit(1);
+    }
 
+    parser->block_stack_pointer--;
 }
 
 static void parse_push(Lexer* lexer) {
@@ -83,7 +93,7 @@ static void parse_set(Lexer* lexer) {
 
 void vl_parser_init(Parser* parser) {
     parser->block_id = 0;
-    parser->stack_pointer = 0;
+    parser->block_stack_pointer = 0;
 }
 
 void vl_parser_parse(Parser* parser, Lexer* lexer) {

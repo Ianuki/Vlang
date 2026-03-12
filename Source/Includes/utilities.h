@@ -36,5 +36,8 @@ const char* token_type_to_string(TokenType type) {
     }
 }
 
+const char* token_to_string(Token token) {
+    printf("%.*s", (int)token.length, token.start);
+}
 
 #endif

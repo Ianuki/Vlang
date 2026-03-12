@@ -1,3 +1,11 @@
+/*
+
+    A string is an array of characters that ends at a null character
+    Not every array of characters that has a null character is a string
+    An array of characters that does not have a null character will never be a string
+
+*/
+
 #include <stdio.h>
 #include <string.h>
 #include <stdint.h>

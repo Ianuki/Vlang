@@ -3,7 +3,8 @@ CXX = gcc
 SRCS = $(wildcard Source/*.c)
 
 build: $(SRCS)
-	$(CXX) $(CXXFLAGS) -o $@ $(SRCS) $(CXXLIBS)
+	mkdir Builds
+	$(CXX) $(CXXFLAGS) -o Builds/$@ $(SRCS) $(CXXLIBS)
 
 clean:
 	rm -f build
