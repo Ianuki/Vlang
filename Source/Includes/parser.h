@@ -1,6 +1,8 @@
 #ifndef PARSER_H
 #define PARSER_H
 
+#include "lexer.h"
+
 typedef enum {
     NODE_PUSH,
     NODE_SET,
@@ -14,6 +16,8 @@ typedef struct ASTNode {
         struct { Token identifier; Token type; } push;
     };
 } ASTNode;
+
+void vl_parser_parse(Lexer* lexer);
 
 #endif
 

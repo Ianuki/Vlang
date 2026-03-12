@@ -13,7 +13,6 @@ typedef enum {
     TOKEN_PUSH,
     TOKEN_SET,
     TOKEN_REPEAT,
-    TOKEN_END,
     TOKEN_JUMP,
     TOKEN_BREAK,
     TOKEN_FUNCTION,
