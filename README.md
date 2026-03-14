@@ -17,7 +17,7 @@ uint64_t xd;
 ```
 
 Now, compare it with a snippet of VI code (chad, safe, free from memory leaks and overhead). Notice how thee syntax is much more sweeter and inviting and makes you want to only use VI for the rest of your life (it's the best option)
-```
+```lua
 push i: U64; set i = 1 /* Tuff variable initialization */
 
 repeat /* Loop repeats forever to ensure turing completeness remains debunked */
