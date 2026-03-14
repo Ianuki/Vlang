@@ -46,18 +46,20 @@ static void enter_code_block(Parser* parser, CodeBlockType type) {
     }
 
     parser->code_block_stack[parser->block_stack_pointer++] = (CodeBlock){
-        parser->block_id++,
-        type
+        .id = parser->block_id++, 
+        .type = type
     };
 }
 
-static void leave_code_block(Parser* parser) {
-    if (parser->block_stack_pointer == 0) { /* Same stupid check, Fix later */
-        printf("Parser error: scope underflow.");
-        exit(ERR_SCOPE_UNDERFLOW);
-    }
+static int current_code_block(Parser* parser) {
+    if (parser->block_stack_pointer == 0) return -1; 
+    return (int)parser->code_block_stack[parser->block_stack_pointer - 1].id;
+}
 
-    parser->block_stack_pointer--;
+static void leave_code_block(Parser* parser) {
+    if (parser->block_stack_pointer > 0) {
+        parser->block_stack_pointer--;
+    }
 }
 
 static void parse_expression(Parser* parser, Lexer* lexer) {
@@ -77,6 +79,8 @@ static void parse_push(Parser* parser, Lexer* lexer) {
     printf("----[ Type: ");
     for (int i = 0; i < type.length; i++) printf("%c", type.start[i]);
     printf("\n");
+
+    printf("----[ Scope: %d\n", current_code_block(parser));
 }
 
 static void parse_set(Parser* parser, Lexer* lexer) {
@@ -96,7 +100,7 @@ static void parse_set(Parser* parser, Lexer* lexer) {
 
 static void parse_if(Parser* parser, Lexer* lexer) {
     printf("If:\n");
-    printf("----[ Scope: %d\n", parser->block_id);
+    printf("----[ Scope: %d\n", current_code_block(parser));
 
     expect_token(lexer, TOKEN_EOL);
 
@@ -105,7 +109,7 @@ static void parse_if(Parser* parser, Lexer* lexer) {
 
 static void parse_repeat(Parser* parser, Lexer* lexer) {
     printf("Repeat:\n");
-    printf("----[ Scope: %d\n", parser->block_id);
+    printf("----[ Scope: %d\n", current_code_block(parser));
 
     expect_token(lexer, TOKEN_EOL);
 
@@ -117,18 +121,26 @@ static void parse_asm(Parser* parser, Lexer* lexer) {
 
     Token current = vl_lexer_next(lexer);
 
-    printf("Bullshit = %s\n", token_type_to_string(current.type));
+    printf("Asm:\n");
+    printf("----[ Scope: %d\n", current_code_block(parser));
     for (current; current.type != TOKEN_RPAREN; current = vl_lexer_next(lexer)) {
         if (current.type == TOKEN_STRING) {
-            printf("----[ %.*s\n", current.start, current.length);
+            printf("----[ Instruction: %.*s\n", current.length, current.start);
         }
     }
+}
+
+static void parse_function(Parser* parser, Lexer* lexer) {
+    printf("Function:\n");
+    printf("----[ Scope: %d\n", parser->block_id);
+
+    enter_code_block(parser, BLOCK_FUNCTION);
 }
 
 static void parse_end(Parser* parser, Lexer* lexer) {
     leave_code_block(parser);
     printf("End:\n");
-    printf("----[ Scope: %d\n", parser->code_block_stack[parser->block_stack_pointer].id);
+    printf("----[ Scope: %d\n", current_code_block(parser));
 }
 
 void vl_parser_init(Parser* parser) {
@@ -147,6 +159,7 @@ void vl_parser_parse(Parser* parser, Lexer* lexer) {
             case TOKEN_END: parse_end(parser, lexer); break;
             case TOKEN_REPEAT: parse_repeat(parser, lexer); break;
             case TOKEN_ASM: parse_asm(parser, lexer); break;
+            case TOKEN_FUNCTION: parse_function(parser, lexer); break;
         }
 
         current_token = vl_lexer_next(lexer);

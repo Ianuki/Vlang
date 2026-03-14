@@ -7,7 +7,8 @@ typedef enum {
     ERR_SCOPE_UNDERFLOW,
     ERR_EXPECTED_GOT,
     ERR_SEEK_FOUND_EOF,
-    ERR_UNCLOSED_STRING
+    ERR_UNCLOSED_STRING,
+    ERR_INVALID_SYNTAX
 } ErrorCodes;
 
 #endif

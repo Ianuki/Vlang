@@ -1,3 +1,2 @@
-build/*
-!build/.gitkeep
+build
 lbuild.exe

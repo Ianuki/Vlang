@@ -1,0 +1,10 @@
+function main(push buffer: U32, push length: U32)
+    if
+        asm (
+            "mov rax, 1"
+            "mov rdi, 1"
+            "mov rbx, 1"
+            "mov rdx, 1"
+        )
+    end
+end

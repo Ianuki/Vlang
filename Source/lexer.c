@@ -75,27 +75,50 @@ static void skip_whitespace(Lexer* lexer) {
 }
 
 static Token make_number(Lexer* lexer) {
-    while (isdigit(peek(lexer)))
-        advance(lexer);
+    TokenType type = TOKEN_NUMBER;
 
-    Token token = make_token(lexer, TOKEN_NUMBER);
-    token.value = strtol(token.start, NULL, 10);
+    if (isalpha(peek(lexer))) {
+        type = TOKEN_IDENTIFIER;
+    }
+
+    while (isalpha(peek(lexer)) || isdigit(peek(lexer))) {
+        if (!isdigit(peek(lexer))) { /* Handle wrong number format */
+            type = TOKEN_IDENTIFIER;
+        }
+
+        advance(lexer);
+    }
+
+    Token token = make_token(lexer, type);
+    if (type == TOKEN_NUMBER) {
+        token.value = strtol(token.start, NULL, 10);
+    }
+
     return token;
 }
 
 static Token make_string(Lexer* lexer) {
-    while (peek(lexer) != '"' && !is_at_end(lexer)) {
-        if (peek(lexer) == '\n') lexer->line++; advance(lexer);
+    while (!is_at_end(lexer) && peek(lexer) != '"') {
+        if (peek(lexer) == '\n') {
+            printf("Lexer error: newline in string.");
+            return make_token(lexer, TOKEN_INVALID_SYNTAX);
+        }
+        advance(lexer);
     }
 
     if (is_at_end(lexer)) {
-        printf("Lexer error: open string.");
+        printf("Lexer error: unclosed string.");
         exit(ERR_UNCLOSED_STRING);
     }
 
-    advance(lexer);
+    Token token = make_token(lexer, TOKEN_STRING);
 
-    return make_token(lexer, TOKEN_STRING);
+    advance(lexer);
+    
+    token.start++; 
+    token.length--; 
+
+    return token;
 }
 
 static Token check_keyword(Lexer* lexer) {
@@ -123,9 +146,10 @@ Token vl_lexer_next(Lexer* lexer) {
 
     lexer->start = lexer->current;
 
-    if (is_at_end(lexer))
+    if (is_at_end(lexer)) {
         return make_token(lexer, TOKEN_EOF);
-
+    }
+        
     char c = advance(lexer);
 
     if (isalpha(c) || c == '_' || c == '@')
@@ -142,7 +166,7 @@ Token vl_lexer_next(Lexer* lexer) {
         case '-': return make_token(lexer, TOKEN_MINUS);
         case '*': return make_token(lexer, TOKEN_STAR);
         case '/': return make_token(lexer, TOKEN_SLASH);
-        case '"': printf("hehe"); return make_token(lexer, TOKEN_DQUOTE);
+        case '"': return make_string(lexer);
 
         case '=':
             if (match(lexer, '=')) return make_token(lexer, TOKEN_EQEQ);

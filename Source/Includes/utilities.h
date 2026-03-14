@@ -12,6 +12,7 @@ static const char* token_type_to_string(TokenType type) {
         case TOKEN_PUSH: return "TOKEN_PUSH";
         case TOKEN_SET: return "TOKEN_SET";
         case TOKEN_REPEAT: return "TOKEN_REPEAT";
+        case TOKEN_STRING: return "TOKEN_STRING";
         case TOKEN_JUMP: return "TOKEN_JUMP";
         case TOKEN_BREAK: return "TOKEN_BREAK";
         case TOKEN_FUNCTION: return "TOKEN_FUNCTION";
@@ -33,6 +34,7 @@ static const char* token_type_to_string(TokenType type) {
         case TOKEN_LBRACKET: return "TOKEN_LBRACKET";
         case TOKEN_RBRACKET: return "TOKEN_RBRACKET";
         case TOKEN_EXCL: return "TOKEN_EXCL";
+        default: return "TOKEN_UNKNOWN";
     }
 }
 

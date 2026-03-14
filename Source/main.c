@@ -50,7 +50,7 @@ int main(int argc, char** argv) {
 
     Lexer lexer;
 
-    printf("\nTOKENIZING:\n");
+    printf("\n[[ TOKENIZING ]]:\n\n");
     
     vl_lexer_init(&lexer, source_code);
     Token token = vl_lexer_next(&lexer);
@@ -64,7 +64,7 @@ int main(int argc, char** argv) {
         token = vl_lexer_next(&lexer);
     }
 
-    printf("\nPARSING:\n");
+    printf("\n[[ PARSING ]]:\n\n");
 
     Parser parser;
     vl_lexer_init(&lexer, source_code);
